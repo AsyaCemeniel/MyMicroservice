@@ -3,11 +3,10 @@ package com.example.micro.myMicroservice.domain;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
- * Created by Mary Ellen Bowman.
- */
+
 public class TourTest {
     @Test
     public void testConstructorAndGetters() throws Exception {

@@ -17,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 
 
@@ -41,7 +42,6 @@ public class TourRatingServiceTest {
     @Mock
     private TourRating tourRatingMock;
 
-
     @Before
     public void setupReturnValuesOfMockMethods() {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tourMock));
@@ -50,13 +50,12 @@ public class TourRatingServiceTest {
         when(tourRatingRepositoryMock.findByTourId(TOUR_ID)).thenReturn(Arrays.asList(tourRatingMock));
     }
 
-
     @Test
     public void lookupRatingById() {
         when(tourRatingRepositoryMock.findById(TOUR_RATING_ID)).thenReturn(Optional.of(tourRatingMock));
 
         //invoke and verify lookupRatingById
-        assertEquals(tourRatingMock, service.lookupRatingById(TOUR_RATING_ID).get());
+        assertThat(service.lookupRatingById(TOUR_RATING_ID).get(), is(tourRatingMock));
     }
 
     @Test
@@ -64,7 +63,7 @@ public class TourRatingServiceTest {
         when(tourRatingRepositoryMock.findAll()).thenReturn(Arrays.asList(tourRatingMock));
 
         //invoke and verify lookupAll
-        assertEquals(tourRatingMock, service.lookupAll().get(0));
+        assertThat(service.lookupAll().get(0), is(tourRatingMock));
     }
 
     @Test
@@ -72,7 +71,7 @@ public class TourRatingServiceTest {
         when(tourRatingMock.getScore()).thenReturn(10);
 
         //invoke and verify getAverageScore
-        assertEquals(10.0, service.getAverageScore(TOUR_ID));
+        assertThat(service.getAverageScore(TOUR_ID), is(10.0));
     }
 
     @Test
@@ -83,7 +82,7 @@ public class TourRatingServiceTest {
         when(tourRatingRepositoryMock.findByTourId(1, pageable)).thenReturn(page);
 
         //invoke and verify lookupRatings
-        assertEquals(page, service.lookupRatings(TOUR_ID, pageable));
+        assertThat(service.lookupRatings(TOUR_ID, pageable), is(page));
     }
 
 
@@ -132,7 +131,7 @@ public class TourRatingServiceTest {
     }
 
 
-     @Test
+    @Test
     public void createNew() {
         //prepare to capture a TourRating Object
         ArgumentCaptor<TourRating> tourRatingCaptor = ArgumentCaptor.forClass(TourRating.class);
@@ -144,9 +143,9 @@ public class TourRatingServiceTest {
         verify(tourRatingRepositoryMock).save(tourRatingCaptor.capture());
 
         //verify the attributes of the Tour Rating Object
-         assertEquals(tourMock, tourRatingCaptor.getValue().getTour());
-         assertEquals(CUSTOMER_ID, tourRatingCaptor.getValue().getCustomerId());
-        assertEquals(2, tourRatingCaptor.getValue().getScore());
-        assertEquals("ok", tourRatingCaptor.getValue().getComment());
+        assertThat(tourRatingCaptor.getValue().getTour(), is(tourMock));
+        assertThat(tourRatingCaptor.getValue().getCustomerId(), is(CUSTOMER_ID));
+        assertThat(tourRatingCaptor.getValue().getScore(), is(2));
+        assertThat(tourRatingCaptor.getValue().getComment(), is("ok"));
     }
 }

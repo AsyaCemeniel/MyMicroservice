@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @RunWith(SpringRunner.class)
@@ -32,7 +33,7 @@ public class TourRatingServiceIntegrationTest {
     public void delete() {
         List<TourRating> tourRatings = service.lookupAll();
         service.delete(tourRatings.get(0).getTour().getId(), tourRatings.get(0).getCustomerId());
-        assertEquals( tourRatings.size() - 1, service.lookupAll().size());
+        assertThat(service.lookupAll().size(), is(tourRatings.size() - 1));
     }
 
     //UnHappy Path, Tour NOT_A_TOUR_ID does not exist
@@ -74,7 +75,7 @@ public class TourRatingServiceIntegrationTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void rateManyProveRollback() {
         int ratings = service.lookupAll().size();
-        Integer[] customers = {100, 101, 102};
+        Integer customers[] = {100, 101, 102};
         service.rateMany(TOUR_ID, 3, customers);
         service.rateMany(TOUR_ID, 3, customers);
     }
@@ -116,7 +117,7 @@ public class TourRatingServiceIntegrationTest {
     //Happy Path get average score of a Tour.
     @Test
     public void getAverageScore() {
-        assertEquals(4.0, service.getAverageScore(TOUR_ID), 0.0);
+        assertTrue(service.getAverageScore(TOUR_ID) == 4.0);
     }
 
     //UnHappy Path, Tour NOT_A_TOUR_ID does not exist
